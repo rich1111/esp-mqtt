@@ -566,13 +566,14 @@ int mqtt_has_valid_msg_hdr(uint8_t *buffer, uint32_t length)
         return 0;
     }
     switch (mqtt_get_type(buffer)) {
+        case MQTT_MSG_TYPE_PUBACK:
+        case MQTT_MSG_TYPE_SUBACK:
+        case MQTT_MSG_TYPE_UNSUBACK:
+            return ((buffer[0] & 0x0f) == 0) || ((buffer[0] & 0x0f) == 0x02);  /* all flag bits are 0 or 0x02 */
     case MQTT_MSG_TYPE_CONNECT:
     case MQTT_MSG_TYPE_CONNACK:
-    case MQTT_MSG_TYPE_PUBACK:
     case MQTT_MSG_TYPE_PUBREC:
     case MQTT_MSG_TYPE_PUBCOMP:
-    case MQTT_MSG_TYPE_SUBACK:
-    case MQTT_MSG_TYPE_UNSUBACK:
     case MQTT_MSG_TYPE_PINGREQ:
     case MQTT_MSG_TYPE_PINGRESP:
     case MQTT_MSG_TYPE_DISCONNECT:
